@@ -17,6 +17,7 @@ node('') {
 	
 	stage ('Junit'){
 		sh "junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)"
+	}
 
 	stage ('Archive Artifacts'){
 		archiveArtifacts artifacts: 'target/*.war'
