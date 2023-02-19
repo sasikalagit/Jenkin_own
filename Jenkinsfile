@@ -8,12 +8,15 @@ node('') {
 	}
 
 	stage ('Test Cases Execution'){
-		sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install -Pcoverage-per-test"
+		sh "script: './mvnw --batch-mode -Dmaven.test.failure.ignore=true test'"
 	}
 
-	stage ('Sonar Analysis'){
-		//sh 'mvn sonar:sonar -Dsonar.host.url=http://35.153.67.119:9000 -Dsonar.login=77467cfd2653653ad3b35463fbfdb09285f08be5'
+	stage ('package'){
+		sh "script: './mvnw --batch-mode package -DskipTests'"
 	}
+	
+	stage ('Junit'){
+		sh "junit(testResults: 'target/surefire-reports/*.xml', allowEmptyResults : true)"
 
 	stage ('Archive Artifacts'){
 		archiveArtifacts artifacts: 'target/*.war'
